@@ -16,7 +16,7 @@ public class LoginOrangeHrm {
     4. Enter password
     5. Click on login button
     6. Check the page title
-   */
+    */
 
     @Test(priority = 1)
 
@@ -32,7 +32,6 @@ public class LoginOrangeHrm {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         //validate presence of User name input field
-
         driver.findElement(By.name("username")).isDisplayed();
 
         //Clear User Name Input field
@@ -74,7 +73,6 @@ public class LoginOrangeHrm {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         //validate presence of User name input field
-
         driver.findElement(By.name("username")).isDisplayed();
 
         //Clear User Name Input field
