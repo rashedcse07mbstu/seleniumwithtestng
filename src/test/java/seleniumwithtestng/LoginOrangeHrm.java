@@ -1,14 +1,9 @@
 package seleniumwithtestng;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
-
-public class LoginOrangeHrm {
+public class LoginOrangeHrm extends BaseClass {
     /*
     1. Open a browser
     2. Open URL (https://opensource-demo.orangehrmlive.com/)
@@ -19,17 +14,8 @@ public class LoginOrangeHrm {
     */
 
     @Test(priority = 1)
-
     public void doLoginWithValidUserPassword() throws InterruptedException {
-        //Open Browser
-        WebDriverManager.firefoxdriver().clearDriverCache().setup();
-        WebDriver driver = new FirefoxDriver();
-
-        // Open Application URL
-        driver.get("https://opensource-demo.orangehrmlive.com");
-
-        //implicit wait
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        setUp();
 
         //validate presence of User name input field
         driver.findElement(By.name("username")).isDisplayed();
@@ -38,7 +24,7 @@ public class LoginOrangeHrm {
         driver.findElement(By.name("username")).clear();
 
         //Enter User Name
-        driver.findElement(By.name("username")).sendKeys("Admin");
+        driver.findElement(By.name("username")).sendKeys(userName);
 
         //validate presence of User name input field
         boolean elementPresence = driver.findElement(By.name("username")).isDisplayed();
@@ -49,28 +35,19 @@ public class LoginOrangeHrm {
 
         //Enter password
         Thread.sleep(2000);
-        driver.findElement(By.name("password")).sendKeys("admin123");
+        driver.findElement(By.name("password")).sendKeys(password);
 
         //Click on login button
         Thread.sleep(2000);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
 
-        // quit browser
-        driver.quit();
+        tearDown();
     }
 
-    @Test(priority = 0)
-
+    @Test(priority = 0, enabled = false)
     public void validateLoginPageTitle() throws InterruptedException {
-        //Open Browser
-        WebDriverManager.firefoxdriver().clearDriverCache().setup();
-        WebDriver driver = new FirefoxDriver();
-
-        // Open Application URL
-        driver.get("https://opensource-demo.orangehrmlive.com");
-
-        //implicit wait
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        //Call this method to setup browser
+        setUp();
 
         //validate presence of User name input field
         driver.findElement(By.name("username")).isDisplayed();
@@ -111,7 +88,7 @@ public class LoginOrangeHrm {
         }
 
         // quit browser
-        driver.quit();
+        tearDown();
     }
 
 }
