@@ -1,10 +1,10 @@
 package seleniumwithtestng;
 
+import com.thedeanda.lorem.LoremIpsum;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -15,6 +15,9 @@ import java.util.Set;
 
 public class CPortAuthority {
     public static WebDriver driver; //Instance Variable
+    String fatherName = LoremIpsum.getInstance().getTitle(2);
+    String motherName = LoremIpsum.getInstance().getTitle(2);
+
 
     @Test
     public void fillOnlineCompleteProcess() throws InterruptedException {
@@ -69,9 +72,6 @@ public class CPortAuthority {
         WebElement fileInput = driver.findElement(By.cssSelector("input#national_id_attachment"));
         fileInput.sendKeys(uploadFile.getAbsolutePath());
 
-//        System.out.println("File text name is: " + fileInput.getText());
-//        Assert.assertEquals("NID_Rashedul.jpg", fileInput.getText());
-
         //select date of birth
         driver.findElement(By.cssSelector("input#date_of_birth")).click();
         driver.findElement(By.cssSelector("div.top")).isDisplayed();
@@ -87,11 +87,9 @@ public class CPortAuthority {
         driver.findElement(By.cssSelector("span.bx-chevron-left[title='Previous Decade']")).click();
         Thread.sleep(2000);
 
-//        driver.findElement(By.cssSelector("input#date_of_birth")).sendKeys("10-03-1985");
         driver.findElements(By.cssSelector("span[data-action='selectYear'].year")).stream()
                 .filter(element -> element.getText().trim().contains("1995"))
                 .findFirst().get().click();
-
 
         Thread.sleep(2000);
         driver.findElements(By.cssSelector("span[data-action='selectMonth'].month")).stream()
@@ -104,8 +102,74 @@ public class CPortAuthority {
                 .findFirst().get().click();
         Thread.sleep(2000);
 
-        /*String monthYearVal = driver.findElement(By.cssSelector("input#date_of_birth")).getText();
-        System.out.println(monthYearVal);*/
+        //Verify NID
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("button#nid_verification")).click();
+        Thread.sleep(2000);
+
+        //Input Father Name
+        driver.findElement(By.cssSelector("input#father_name")).sendKeys(fatherName);
+        Thread.sleep(2000);
+
+        //Input Mother Name
+        driver.findElement(By.cssSelector("input#mother_name")).sendKeys(motherName);
+
+        //Input Mobile No
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("input#mobile")).sendKeys("01729415699");
+
+        //verify OTP Password
+        Thread.sleep(2000);
+        Alert alert = driver.switchTo().alert();
+        String alertPassword = alert.getText();
+
+        System.out.println("Password is: " + alertPassword);
+
+        String password = alertPassword.replaceAll("[^0-9]", "");
+
+        System.out.println("Password:" + password);
+        alert.accept();
+
+        //Enter OTP
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("input#otp")).sendKeys(password);
+        Thread.sleep(2000);
+        alert.accept();
+
+        // Input E-mail Address
+        driver.findElement(By.cssSelector(" input#email")).sendKeys("rasel.cse07@gmail.com");
+        Thread.sleep(2000);
+
+        //Select Religion
+        Select selectReligion = new Select(driver.findElement(By.cssSelector("select#religion")));
+        selectReligion.selectByIndex(1);
+        Thread.sleep(2000);
+
+        //Scroll Down
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,300)", "");
+
+        //Attach Photo
+        Thread.sleep(2000);
+
+        File photo = new File("C:\\seleniumwithtestng\\src\\test\\resources\\Photo_Rashed.jpg");
+        WebElement photoAttachment = driver.findElement(By.cssSelector("input#photo"));
+        photoAttachment.sendKeys(photo.getAbsolutePath());
+        Thread.sleep(5000);
+
+        //Attach Signature
+        File signature = new File("C:\\seleniumwithtestng\\src\\test\\resources\\Signature_Rashed.jpg");
+        WebElement signatureAttachment = driver.findElement(By.cssSelector("input#signature"));
+        signatureAttachment.sendKeys(signature.getAbsolutePath());
+        Thread.sleep(5000);
+
+        //Click on Next button
+        boolean nextBtn = driver.findElement(By.cssSelector("button[class$='valid']")).isDisplayed();
+        System.out.println(nextBtn);
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("button[class$='valid']")).click();
+        Thread.sleep(2000);
+
 
     }
 
