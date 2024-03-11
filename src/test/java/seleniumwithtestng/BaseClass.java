@@ -2,6 +2,7 @@ package seleniumwithtestng;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -33,5 +34,13 @@ public abstract class BaseClass {
     @AfterMethod
     public void tearDown() {
         driver.quit();
+    }
+
+    public void fillUpInputFieldByValue(WebElement element, String text){
+        element.sendKeys(text);
+    }
+
+    public void doClick(WebElement element) {
+        element.click();
     }
 }

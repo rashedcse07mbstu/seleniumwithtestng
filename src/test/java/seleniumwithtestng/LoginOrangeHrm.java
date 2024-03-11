@@ -1,9 +1,16 @@
 package seleniumwithtestng;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class LoginOrangeHrm extends BaseClass {
+    WebElement userNameEle;
+    WebElement passEle;
+    WebElement loginBtnEle;
+    public String expectedTitle = "OrangeHRM";
+
     /*
     1. Open a browser
     2. Open URL (https://opensource-demo.orangehrmlive.com/)
@@ -19,28 +26,29 @@ public class LoginOrangeHrm extends BaseClass {
         setUp();
 
         //validate presence of User name input field
-        driver.findElement(By.name("username")).isDisplayed();
+        userNameEle = driver.findElement(By.name("username"));
+        userNameEle.isDisplayed();
 
         //Clear User Name Input field
-        driver.findElement(By.name("username")).clear();
+        userNameEle.clear();
 
         //Enter User Name
-        driver.findElement(By.name("username")).sendKeys(userName);
-
-        //validate presence of User name input field
-        boolean elementPresence = driver.findElement(By.name("username")).isDisplayed();
-        System.out.println(elementPresence);
+        fillUpInputFieldByValue(userNameEle, userName);
 
         //Clear Password Input field
-        driver.findElement(By.name("password")).clear();
+        passEle = driver.findElement(By.name("password"));
+        passEle.clear();
 
         //Enter password
         Thread.sleep(2000);
-        driver.findElement(By.name("password")).sendKeys(password);
+        fillUpInputFieldByValue(passEle, password);
 
         //Click on login button
         Thread.sleep(2000);
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
+
+        loginBtnEle = driver.findElement(By.xpath("//button[@type='submit']"));
+        //Click on Login Button
+        doClick(loginBtnEle);
 
         //Close Browser Session
         tearDown();
@@ -48,34 +56,41 @@ public class LoginOrangeHrm extends BaseClass {
 
     @Test(priority = 0, enabled = true, description = "To validate Home Page Title after login")
     public void validateLoginPageTitle() throws InterruptedException {
-        //Call this method to setup browser
+        //Browser Set up
         setUp();
 
         //validate presence of User name input field
-        driver.findElement(By.name("username")).isDisplayed();
+        userNameEle = driver.findElement(By.name("username"));
+        userNameEle.isDisplayed();
 
         //Clear User Name Input field
-        driver.findElement(By.name("username")).clear();
+        userNameEle.clear();
 
         //Enter User Name
-        driver.findElement(By.name("username")).sendKeys(userName);
-
-        //validate presence of User name input field
-        boolean elementPresence = driver.findElement(By.name("username")).isDisplayed();
-        System.out.println(elementPresence);
+        fillUpInputFieldByValue(userNameEle, userName);
 
         //Clear Password Input field
-        driver.findElement(By.name("password")).clear();
+        passEle = driver.findElement(By.name("password"));
+        passEle.clear();
+
+        //validate presence of password input field
+        passEle.isDisplayed();
 
         //Enter password
         Thread.sleep(2000);
-        driver.findElement(By.name("password")).sendKeys(password);
+        fillUpInputFieldByValue(passEle, password);
 
         //Click on login button
         Thread.sleep(2000);
-        driver.findElement(By.xpath("//button[@type='submit']")).click();
 
-        String expectedTitle = "OrangeHRM5";
+        loginBtnEle = driver.findElement(By.xpath("//button[@type='submit']"));
+        //Click on Login Button
+        doClick(loginBtnEle);
+
+        //Assertion Login Page Title
+        Assert.assertEquals(getPageTitle(), expectedTitle);
+
+        /*String expectedTitle = "OrangeHRM5";
 
         if (getPageTitle().equals(expectedTitle)) {
             System.out.println("Test Case passed");
@@ -83,7 +98,7 @@ public class LoginOrangeHrm extends BaseClass {
 
         if (getPageTitle().contains("OrangeHRM")) {
             System.out.println("Test Case passed");
-        }
+        }*/
 
         // quit browser
         tearDown();
