@@ -68,7 +68,7 @@ public class CPortAuthority {
 
         //Upload NID File
 //        File uploadFile = new File("usr." + "src/test/resources/NID_Rashedul.jpg");
-        File uploadFile = new File("C:\\seleniumwithtestng\\src\\test\\resources\\NID_Rashedul.jpg");
+        File uploadFile = new File(System.getProperty("user.dir") + "\\src\\test\\resources\\NID_Rashedul.jpg");
         WebElement fileInput = driver.findElement(By.cssSelector("input#national_id_attachment"));
         fileInput.sendKeys(uploadFile.getAbsolutePath());
 
@@ -152,24 +152,76 @@ public class CPortAuthority {
         //Attach Photo
         Thread.sleep(2000);
 
-        File photo = new File("C:\\seleniumwithtestng\\src\\test\\resources\\Photo_Rashed.jpg");
+        File photo = new File(System.getProperty("user.dir") + "\\src\\test\\resources\\Photo_Rashed.jpg");
         WebElement photoAttachment = driver.findElement(By.cssSelector("input#photo"));
         photoAttachment.sendKeys(photo.getAbsolutePath());
         Thread.sleep(5000);
 
         //Attach Signature
-        File signature = new File("C:\\seleniumwithtestng\\src\\test\\resources\\Signature_Rashed.jpg");
+        File signature = new File(System.getProperty("user.dir") + "\\src\\test\\resources\\Signature_Rashed.jpg");
         WebElement signatureAttachment = driver.findElement(By.cssSelector("input#signature"));
         signatureAttachment.sendKeys(signature.getAbsolutePath());
         Thread.sleep(5000);
 
+        //Scroll Down
+        JavascriptExecutor js2 = (JavascriptExecutor) driver;
+        js2.executeScript("window.scrollBy(0,200)", "");
+
         //Click on Next button
-        boolean nextBtn = driver.findElement(By.cssSelector("button[class$='valid']")).isDisplayed();
-        System.out.println(nextBtn);
         Thread.sleep(2000);
-        driver.findElement(By.cssSelector("button[class$='valid']")).click();
+        driver.findElement(By.cssSelector("button.nextBtn[value='first']")).click();
         Thread.sleep(2000);
 
+        //Address Section
+        //Select DIVISION
+        Select selectDivision = new Select(driver.findElement(By.cssSelector("select#permanent_division")));
+        selectDivision.selectByIndex(1);
+        Thread.sleep(2000);
+
+        //Select District
+        Select selectDistrict = new Select(driver.findElement(By.cssSelector("select#permanent_district")));
+        selectDistrict.selectByIndex(1);
+        Thread.sleep(5000);
+
+        //Select Thana
+//        Select selectThana = new Select(driver.findElement(By.cssSelector("select#permanent_thana")));
+
+//        WebElement element = driver.findElement(By.cssSelector("div select#permanent_thana"));
+        WebElement element = driver.findElement(By.cssSelector("span#select2-permanent_thana-container[role='textbox']"));
+
+        boolean displayed = element.isDisplayed();
+        System.out.println(displayed);
+
+        Select selectThana = new Select(element);
+        List <WebElement> elementCount = selectThana.getOptions();
+        System.out.println(elementCount.size());
+        selectThana.selectByValue("10101");
+        Thread.sleep(2000);
+
+        // Input Post Office
+        driver.findElement(By.cssSelector("input#permanent_post_office_name")).sendKeys("Dhaka");
+        Thread.sleep(2000);
+
+        // Input Post Code
+        driver.findElement(By.cssSelector("input#permanent_post_code")).sendKeys("1250");
+        Thread.sleep(2000);
+
+        // Input Permanent Address
+        driver.findElement(By.cssSelector(" input#permanent_address")).sendKeys("Banasree R 9");
+        Thread.sleep(2000);
+
+        //Scroll Down
+        JavascriptExecutor js3 = (JavascriptExecutor) driver;
+        js3.executeScript("window.scrollBy(0,250)", "");
+
+        // Check same_as_permanent_address checkbox
+        driver.findElement(By.cssSelector("div fieldset.form-group div.custom-checkbox")).click();
+//        driver.findElement(By.cssSelector("input#same_as_permanent_address")).click();
+        Thread.sleep(2000);
+
+        //Click on Next button
+        driver.findElement(By.cssSelector("div#enable_after_district_verification button.nextBtn[type='button']")).click();
+        Thread.sleep(2000);
 
     }
 
