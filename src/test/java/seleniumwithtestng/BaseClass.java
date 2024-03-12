@@ -8,11 +8,13 @@ import org.testng.annotations.BeforeMethod;
 
 import java.time.Duration;
 
-public class BaseClass {
+public abstract class BaseClass {
     public static WebDriver driver; //Instance Variable
     protected String applicationUrl = "https://opensource-demo.orangehrmlive.com";
     protected String userName = "Admin";
     protected String password = "admin123";
+
+    public abstract String getPageTitle();
 
     //To setup browser info before executing test method
     @BeforeMethod

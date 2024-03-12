@@ -13,8 +13,9 @@ public class LoginOrangeHrm extends BaseClass {
     6. Check the page title
     */
 
-    @Test(priority = 1)
+    @Test(priority = 1, enabled = false, description = "To login application with valid User Name and password")
     public void doLoginWithValidUserPassword() throws InterruptedException {
+        //Browser Set up
         setUp();
 
         //validate presence of User name input field
@@ -41,10 +42,11 @@ public class LoginOrangeHrm extends BaseClass {
         Thread.sleep(2000);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
 
+        //Close Browser Session
         tearDown();
     }
 
-    @Test(priority = 0, enabled = false)
+    @Test(priority = 0, enabled = true, description = "To validate Home Page Title after login")
     public void validateLoginPageTitle() throws InterruptedException {
         //Call this method to setup browser
         setUp();
@@ -56,7 +58,7 @@ public class LoginOrangeHrm extends BaseClass {
         driver.findElement(By.name("username")).clear();
 
         //Enter User Name
-        driver.findElement(By.name("username")).sendKeys("Admin");
+        driver.findElement(By.name("username")).sendKeys(userName);
 
         //validate presence of User name input field
         boolean elementPresence = driver.findElement(By.name("username")).isDisplayed();
@@ -67,23 +69,19 @@ public class LoginOrangeHrm extends BaseClass {
 
         //Enter password
         Thread.sleep(2000);
-        driver.findElement(By.name("password")).sendKeys("admin123");
+        driver.findElement(By.name("password")).sendKeys(password);
 
         //Click on login button
         Thread.sleep(2000);
         driver.findElement(By.xpath("//button[@type='submit']")).click();
 
-        //Assertion
-        String actualTitle = driver.getTitle();
-        System.out.println("Page title is: " + actualTitle);
-
         String expectedTitle = "OrangeHRM5";
 
-        if (actualTitle.equals(expectedTitle)) {
+        if (getPageTitle().equals(expectedTitle)) {
             System.out.println("Test Case passed");
         }
 
-        if (actualTitle.contains("OrangeHRM")) {
+        if (getPageTitle().contains("OrangeHRM")) {
             System.out.println("Test Case passed");
         }
 
@@ -91,4 +89,8 @@ public class LoginOrangeHrm extends BaseClass {
         tearDown();
     }
 
+    @Override
+    public String getPageTitle() {
+        return driver.getTitle();
+    }
 }
