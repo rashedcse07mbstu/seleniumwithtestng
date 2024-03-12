@@ -39,8 +39,6 @@ public class CPortAuthority {
             elementList.get(0).findElement(By.linkText("DETAILS")).click();
         }
 
-        //Get the main window handle
-
         //Get handles of the windows
         String mainWindowHandle = driver.getWindowHandle();
         Set<String> allWindowHandles = driver.getWindowHandles();
@@ -67,7 +65,6 @@ public class CPortAuthority {
         driver.findElement(By.cssSelector("input#national_id")).sendKeys("8231771135");
 
         //Upload NID File
-//        File uploadFile = new File("usr." + "src/test/resources/NID_Rashedul.jpg");
         File uploadFile = new File(System.getProperty("user.dir") + "\\src\\test\\resources\\NID_Rashedul.jpg");
         WebElement fileInput = driver.findElement(By.cssSelector("input#national_id_attachment"));
         fileInput.sendKeys(uploadFile.getAbsolutePath());
@@ -75,10 +72,8 @@ public class CPortAuthority {
         //select date of birth
         driver.findElement(By.cssSelector("input#date_of_birth")).click();
         driver.findElement(By.cssSelector("div.top")).isDisplayed();
-//        driver.findElement(By.cssSelector("td[data-action='selectDay'].active")).click();
         driver.findElement(By.cssSelector("th.picker-switch[title='Select Month']")).click();
         driver.findElement(By.cssSelector("th.picker-switch[title='Select Year']")).click();
-//        driver.findElement(By.cssSelector("span.bx-chevron-left[title='Previous Century']")).click();
         Thread.sleep(2000);
         driver.findElement(By.cssSelector("span.bx-chevron-left[title='Previous Decade']")).click();
         Thread.sleep(2000);
@@ -105,7 +100,7 @@ public class CPortAuthority {
         //Verify NID
         Thread.sleep(2000);
         driver.findElement(By.cssSelector("button#nid_verification")).click();
-        Thread.sleep(2000);
+        Thread.sleep(3000);
 
         //Input Father Name
         driver.findElement(By.cssSelector("input#father_name")).sendKeys(fatherName);
@@ -122,12 +117,8 @@ public class CPortAuthority {
         Thread.sleep(2000);
         Alert alert = driver.switchTo().alert();
         String alertPassword = alert.getText();
-
-        System.out.println("Password is: " + alertPassword);
-
+        //Get and Input OTP
         String password = alertPassword.replaceAll("[^0-9]", "");
-
-        System.out.println("Password:" + password);
         alert.accept();
 
         //Enter OTP
@@ -184,18 +175,10 @@ public class CPortAuthority {
         Thread.sleep(5000);
 
         //Select Thana
-//        Select selectThana = new Select(driver.findElement(By.cssSelector("select#permanent_thana")));
+        driver.findElement(By.cssSelector("span#select2-permanent_thana-container")).click();
+        Thread.sleep(2000);
 
-//        WebElement element = driver.findElement(By.cssSelector("div select#permanent_thana"));
-        WebElement element = driver.findElement(By.cssSelector("span#select2-permanent_thana-container[role='textbox']"));
-
-        boolean displayed = element.isDisplayed();
-        System.out.println(displayed);
-
-        Select selectThana = new Select(element);
-        List <WebElement> elementCount = selectThana.getOptions();
-        System.out.println(elementCount.size());
-        selectThana.selectByValue("10101");
+        driver.findElements(By.cssSelector("ul.select2-results__options > li[id^='select2-permanent_thana-result']")).get(1).click();
         Thread.sleep(2000);
 
         // Input Post Office
@@ -216,12 +199,87 @@ public class CPortAuthority {
 
         // Check same_as_permanent_address checkbox
         driver.findElement(By.cssSelector("div fieldset.form-group div.custom-checkbox")).click();
-//        driver.findElement(By.cssSelector("input#same_as_permanent_address")).click();
         Thread.sleep(2000);
 
         //Click on Next button
         driver.findElement(By.cssSelector("div#enable_after_district_verification button.nextBtn[type='button']")).click();
         Thread.sleep(2000);
+
+        //Education Section
+        //Select Exam
+        Select selectExam = new Select(driver.findElement(By.cssSelector("select#education_0_exam")));
+        selectExam.selectByIndex(1);
+        Thread.sleep(2000);
+
+        //Select Subject
+        driver.findElement(By.cssSelector("span#select2-education_0_subject-container")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("ul.select2-results__options > li[id^='select2-education_']")).click();
+
+        //Select Board
+        driver.findElement(By.cssSelector("span#select2-education_0_exam_body-container")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("ul.select2-results__options > li[id^='select2-education_']")).click();
+        Thread.sleep(2000);
+
+        //Select Passing year
+        driver.findElement(By.cssSelector("input#education_0_passing_year")).sendKeys("2024");
+        Thread.sleep(2000);
+
+        //Select Result with CGPA
+        driver.findElement(By.cssSelector("span#select2-education_0_result_type-container")).click();
+        Thread.sleep(2000);
+
+        driver.findElement(By.cssSelector("ul.select2-results__options > li[id^='select2-education_']")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("input#education_0_result")).sendKeys("5");
+
+        //Select SSC Exam
+        Select selectSscExam = new Select(driver.findElement(By.cssSelector("select#education_1_exam")));
+        selectSscExam.selectByIndex(1);
+        Thread.sleep(2000);
+
+        //Select Subject
+        driver.findElement(By.cssSelector("span#select2-education_1_subject-container")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("ul.select2-results__options > li[id^='select2-education_']")).click();
+        Thread.sleep(2000);
+
+        //Select Board
+        driver.findElement(By.cssSelector("span#select2-education_1_exam_body-container")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("ul.select2-results__options > li[id^='select2-education_1_exam_body-result']")).click();
+        Thread.sleep(2000);
+
+        //Select SSC passing year
+        driver.findElement(By.cssSelector("input#education_1_passing_year")).sendKeys("2024");
+        Thread.sleep(2000);
+
+        //Select SSC Result with CGPA
+        driver.findElement(By.cssSelector("span#select2-education_1_result_type-container")).click();
+        Thread.sleep(2000);
+
+        driver.findElement(By.cssSelector("ul.select2-results__options > li[id^='select2-education_1']")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("input#education_1_result")).sendKeys("5");
+
+        //Click on Next button
+        driver.findElement(By.cssSelector("div#nextButtonContainer button.nextBtn[type='button']")).click();
+        Thread.sleep(2000);
+
+        //Job Experience Section
+        //Input Organization
+        driver.findElement(By.cssSelector("input#jobexperience_0_organization")).sendKeys("BRAC IT");
+        Thread.sleep(2000);
+
+        /*//Select Designation
+        Select designation = new Select(driver.findElement(By.cssSelector("span#select2-jobexperience_0_designation-container")));
+        selectExam.selectByIndex(1);
+        Thread.sleep(2000);
+
+        //Select START DATE
+        driver.findElement(By.cssSelector("input#jobexperience_0_start_date")).click();
+        Thread.sleep(2000);*/
 
     }
 
