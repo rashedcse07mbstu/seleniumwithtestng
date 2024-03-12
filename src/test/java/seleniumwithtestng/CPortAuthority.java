@@ -1,14 +1,24 @@
 package seleniumwithtestng;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.thedeanda.lorem.LoremIpsum;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
-import org.testng.annotations.Test;
+import org.testng.ITestResult;
+import org.testng.annotations.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -18,9 +28,29 @@ public class CPortAuthority {
     String fatherName = LoremIpsum.getInstance().getTitle(2);
     String motherName = LoremIpsum.getInstance().getTitle(2);
 
+    public ExtentSparkReporter sparkReporter;
+    public ExtentReports extent;
+    public ExtentTest test;
 
-    @Test
-    public void fillOnlineCompleteProcess() throws InterruptedException {
+    @BeforeTest
+    public void setExtent() {
+        sparkReporter = new ExtentSparkReporter(System.getProperty("user.dir") + "\\build\\extendReport\\ExtendReport.html");
+        sparkReporter.config().setDocumentTitle("Chittagong Port Authority Project's Automation Report");
+        sparkReporter.config().setReportName("Chittagong Port Authority Project's Automation Report");
+        sparkReporter.config().setTheme(Theme.DARK);
+
+        extent = new ExtentReports();
+
+        extent.attachReporter(sparkReporter);
+
+        extent.setSystemInfo("Host IP", "http://123.200.20.20:5302/");
+        extent.setSystemInfo("OS", "Windows");
+        extent.setSystemInfo("Browser", "Firefox");
+        extent.setSystemInfo("Author", "CNS Ltd");
+    }
+
+    @BeforeMethod
+    public void setUp() {
         //Open Browser
         WebDriverManager.firefoxdriver().clearDriverCache().setup();
         driver = new FirefoxDriver();
@@ -31,6 +61,11 @@ public class CPortAuthority {
 
         //implicit wait
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    }
+
+    @Test
+    public void fillOnlineJobApplicationCompleteProcess() throws InterruptedException {
+        test = extent.createTest("fillOnlineCompleteProcess", "fill Online Job Application Completion Process");
 
         List<WebElement> elementList = driver.findElements(By.cssSelector(" table#circularMst tbody tr"));
         System.out.println(elementList.size());
@@ -272,15 +307,45 @@ public class CPortAuthority {
         driver.findElement(By.cssSelector("input#jobexperience_0_organization")).sendKeys("BRAC IT");
         Thread.sleep(2000);
 
-        /*//Select Designation
-        Select designation = new Select(driver.findElement(By.cssSelector("span#select2-jobexperience_0_designation-container")));
+        //Select Designation
+        /*Select designation = new Select(driver.findElement(By.cssSelector("span#select2-jobexperience_0_designation-container")));
         selectExam.selectByIndex(1);
         Thread.sleep(2000);
 
         //Select START DATE
         driver.findElement(By.cssSelector("input#jobexperience_0_start_date")).click();
         Thread.sleep(2000);*/
+    }
 
+    @AfterMethod
+    public void tearDown(ITestResult result) throws IOException {
+        if (result.getStatus() == ITestResult.FAILURE) {
+            test.log(Status.FAIL, "Test Case failed for" + " " + result.getName());
+            test.log(Status.FAIL, "Test Case failed for" + " " + result.getThrowable());
+            String screenshotPath = CPortAuthority.getScreenShot(driver, result.getName());
+            test.addScreenCaptureFromPath(screenshotPath);
+        } else if (result.getStatus() == ITestResult.SKIP) {
+            test.log(Status.SKIP, "Test Case Skipped for " + " " + result.getName());
+        } else if (result.getStatus() == ITestResult.SUCCESS) {
+            test.log(Status.PASS, "Test Case Passed for" + " " + result.getName());
+        }
+        driver.quit();
+
+    }
+
+    @AfterTest
+    public void endReport() {
+        extent.flush();
+    }
+
+    public static String getScreenShot(WebDriver driver, String screenshotName) throws IOException {
+        String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+        TakesScreenshot ts = (TakesScreenshot) driver;
+        String source = ts.getScreenshotAs(OutputType.BASE64);
+        String destination = System.getProperty("user.dir") + "/Screenshots/" + screenshotName + dateName + ".png";
+        File finalDestination = new File(destination);
+        FileUtils.copyFile(new File(source), finalDestination);
+        return destination;
     }
 
 }
