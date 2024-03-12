@@ -3,7 +3,7 @@
 <suite name="Regression Test Suite">
     <test name="Automation Test">
         <classes>
-            <class name="seleniumwithtestng.LoginOrangeHrm">
+            <class name="seleniumwithtestng.CPortAuthority">
             </class>
         </classes>
     </test>
